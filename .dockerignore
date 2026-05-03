@@ -1,0 +1,12 @@
+__pycache__
+*.pyc
+.git
+.github
+.gitignore
+.env
+.env.*
+workflows/
+gateway-cli.sh
+data/
+examples/
+*.md

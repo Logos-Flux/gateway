@@ -1,0 +1,21 @@
+[tool.ruff]
+# Minimal config for v1.0.0 cleanup. Sensible defaults; not strict.
+target-version = "py312"
+line-length = 100
+extend-exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Default rule set (E, F, W). Ignore line-length so we don't force a refactor.
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"

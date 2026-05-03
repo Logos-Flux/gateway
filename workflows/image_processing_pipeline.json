@@ -1,0 +1,163 @@
+{
+  "prompt": {
+    "1": {
+      "class_type": "LoadImage",
+      "inputs": {
+        "image": "input.png"
+      }
+    },
+
+    "10": {
+      "_meta": { "title": "Toggle: Background Removal" },
+      "class_type": "RMBG",
+      "inputs": {
+        "image": ["1", 0],
+        "model": "RMBG-2.0",
+        "sensitivity": 1.0,
+        "process_res": 1024,
+        "mask_blur": 0,
+        "mask_offset": 0,
+        "invert_output": false,
+        "refine_foreground": false,
+        "background": "Color",
+        "background_color": "#FFFFFF"
+      }
+    },
+    "11": {
+      "_meta": { "title": "Switch: Background Removal" },
+      "class_type": "easy imageSwitch",
+      "inputs": {
+        "image_a": ["10", 0],
+        "image_b": ["1", 0],
+        "boolean": true
+      }
+    },
+    "12": {
+      "_meta": { "title": "Strip Alpha (RGBA to RGB)" },
+      "class_type": "SplitImageWithAlpha",
+      "inputs": {
+        "image": ["11", 0]
+      }
+    },
+
+    "20": {
+      "_meta": { "title": "Toggle: SAM2 Segmentation" },
+      "class_type": "SAM2Segment",
+      "inputs": {
+        "image": ["12", 0],
+        "prompt": "subject",
+        "sam2_model": "sam2.1_hiera_large",
+        "dino_model": "GroundingDINO_SwinT_OGC (694MB)",
+        "device": "Auto",
+        "threshold": 0.3,
+        "mask_blur": 0,
+        "mask_offset": 0,
+        "invert_output": false
+      }
+    },
+    "21": {
+      "_meta": { "title": "Switch: SAM2 Segmentation" },
+      "class_type": "easy imageSwitch",
+      "inputs": {
+        "image_a": ["20", 0],
+        "image_b": ["12", 0],
+        "boolean": false
+      }
+    },
+
+    "30": {
+      "_meta": { "title": "Toggle: Upscale (4x-UltraSharp)" },
+      "class_type": "UpscaleModelLoader",
+      "inputs": {
+        "model_name": "4x-UltraSharp.pth"
+      }
+    },
+    "31": {
+      "class_type": "ImageUpscaleWithModel",
+      "inputs": {
+        "upscale_model": ["30", 0],
+        "image": ["21", 0]
+      }
+    },
+    "32": {
+      "_meta": { "title": "Switch: Upscale" },
+      "class_type": "easy imageSwitch",
+      "inputs": {
+        "image_a": ["31", 0],
+        "image_b": ["21", 0],
+        "boolean": true
+      }
+    },
+
+    "40": {
+      "_meta": { "title": "Toggle: SeedVR2 Enhance" },
+      "class_type": "SeedVR2LoadDiTModel",
+      "inputs": {
+        "model": "seedvr2_ema_3b_fp8_e4m3fn.safetensors",
+        "device": "cuda:0"
+      }
+    },
+    "41": {
+      "class_type": "SeedVR2LoadVAEModel",
+      "inputs": {
+        "model": "ema_vae_fp16.safetensors",
+        "device": "cuda:0"
+      }
+    },
+    "42": {
+      "class_type": "SeedVR2VideoUpscaler",
+      "inputs": {
+        "image": ["21", 0],
+        "dit": ["40", 0],
+        "vae": ["41", 0],
+        "seed": 42,
+        "resolution": 2160,
+        "max_resolution": 0,
+        "batch_size": 1,
+        "uniform_batch_size": false,
+        "color_correction": "lab"
+      }
+    },
+    "43": {
+      "_meta": { "title": "Switch: SeedVR2 Enhance" },
+      "class_type": "easy imageSwitch",
+      "inputs": {
+        "image_a": ["42", 0],
+        "image_b": ["32", 0],
+        "boolean": false
+      }
+    },
+
+    "50": {
+      "_meta": { "title": "Toggle: Color Correction" },
+      "class_type": "ColorCorrect",
+      "inputs": {
+        "image": ["43", 0],
+        "temperature": 0,
+        "hue": 0,
+        "brightness": 0,
+        "contrast": 0,
+        "saturation": 0,
+        "gamma": 1.0
+      }
+    },
+    "51": {
+      "_meta": { "title": "Switch: Color Correction" },
+      "class_type": "easy imageSwitch",
+      "inputs": {
+        "image_a": ["50", 0],
+        "image_b": ["43", 0],
+        "boolean": true
+      }
+    },
+
+    "90": {
+      "_meta": { "title": "Save Output" },
+      "class_type": "SaveImage",
+      "inputs": {
+        "images": ["51", 0],
+        "filename_prefix": "pipeline_output"
+      }
+    }
+  }
+}

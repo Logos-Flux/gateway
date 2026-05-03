@@ -1,0 +1,27 @@
+services:
+  gateway:
+    build: .
+    container_name: gateway
+    network_mode: host
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - gateway-data:/app/data
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - GATEWAY_API_TOKEN=${GATEWAY_API_TOKEN}
+      - NTFY_ENABLED=${NTFY_ENABLED:-false}
+      - NTFY_TOPIC=${NTFY_TOPIC:-gateway}
+      - NTFY_URL=${NTFY_URL:-https://ntfy.sh}
+      - PREEMPT_PRIORITY_GAP=${PREEMPT_PRIORITY_GAP:-2}
+      - IDLE_TIMEOUT_SECONDS=${IDLE_TIMEOUT_SECONDS:-300}
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            # Remove this block if running on a host without a GPU
+            - capabilities: [gpu]
+
+volumes:
+  gateway-data:

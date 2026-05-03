@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / cached
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Packaging / build artifacts
+*.egg-info/
+dist/
+build/
+
+# Environments
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Tooling caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# Local data / runtime artifacts
+data/
+output/
+*.db
+*.sqlite
+*.sqlite3
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/
