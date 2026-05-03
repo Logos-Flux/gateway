@@ -1,5 +1,5 @@
 fastapi>=0.115.0
 uvicorn>=0.34.0
-docker>=7.0.0
+docker>=7.1.0
 httpx>=0.27.0
 aiosqlite>=0.20.0
